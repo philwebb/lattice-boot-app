@@ -1,0 +1,63 @@
+# Spring Boot DevTools Example
+
+This is a small example application that demonstrates the new `spring-boot-devtools`
+module.
+
+
+
+## Local Development
+Start `Application.main(...)` in your IDE then edit the `.css`, `.html` or `.java` files.
+
+
+
+## Lattice Remote Debug
+Deploy to lattice to demonstrate remote debug tunneling:
+
+* Install and configure Lattice (http://lattice.cf/)
+* Also configure Lattice to use a docker private registry (http://lattice.cf/docs/private-docker-registry/)
+
+Make sure everything is running
+
+```
+$ cd ~/projects/lattice
+$ vagrant up
+
+$ boot2docker up
+$ boot2docker shellinit
+$ docker run -p 5000:5000 registry
+```
+
+Build the docker image:
+
+```
+$ boot2docker shellinit
+$ mvn package docker
+$ docker push 192.168.59.103:5000/spring-boot-app
+```
+
+Run with lattice:
+
+```
+$ ltc create spring-boot-app 192.168.59.103:5000/spring-boot-app
+```
+
+In the IDE
+
+* Run `org.springframework.boot.devtools.RemoteSpringApplication http://spring-boot-app.192.168.11.11.xip.io`
+* Run a remote debug session to localhost:8000
+
+
+
+## Cloud Foundry Remote Update
+
+Push:
+
+```
+$ cf push appname
+```
+
+In the IDE
+
+* Run `org.springframework.boot.devtools.RemoteSpringApplication http://appname.cfapps.io`
+* Edit a file and the remote site will update
+
